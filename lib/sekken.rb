@@ -51,7 +51,6 @@ class Sekken
   # Public: Returns an Operation by service, port and operation name.
   def operation(service_name, port_name, operation_name)
     operation = @wsdl.operation(service_name.to_s, port_name.to_s, operation_name.to_s)
-    verify_operation_style! operation
 
     Operation.new(operation, @wsdl, @http)
   end
@@ -62,14 +61,4 @@ class Sekken
   def new_http_client
     self.class.http_adapter.new
   end
-
-  # Private: Raises if the operation style is not supported.
-  def verify_operation_style!(operation)
-    if operation.input_style == 'rpc/encoded'
-     raise UnsupportedStyleError,
-           "#{operation.name.inspect} is an #{operation.input_style.inspect} style operation.\n" \
-           "Currently this style is not supported."
-    end
-  end
-
 end
